@@ -26,4 +26,5 @@ public class SpringCrudApplication {
 			courseRepository.save(c);
 		};
 	}
+	
 }
