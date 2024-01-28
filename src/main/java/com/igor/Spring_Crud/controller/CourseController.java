@@ -20,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.igor.Spring_Crud.model.Course;
 import com.igor.Spring_Crud.repository.CourseRepository;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -35,7 +38,7 @@ public class CourseController {
         return courseRepository.findAll();
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Course> findById(@PathVariable Long id){
+    public ResponseEntity<Course> findById(@PathVariable @NotNull @Positive Long id){
        return courseRepository.findById(id)
        .map(recordFound -> ResponseEntity.ok().body(recordFound))
        .orElse(ResponseEntity.notFound().build());
@@ -44,7 +47,7 @@ public class CourseController {
     //Metodo só vai ser chamado quando realizar um http post
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public Course create(@RequestBody Course course){
+    public Course create(@RequestBody @Valid Course course){
         //Retorne o status do salvamento da informação
         return courseRepository.save(course);
 
@@ -56,7 +59,7 @@ public class CourseController {
 
     //Vai atualizar as informações do registro do objeto
     @PutMapping("/{id}")
-    public ResponseEntity<Course> update(@PathVariable Long id, @RequestBody Course course){
+    public ResponseEntity<Course> update(@PathVariable @NotNull @Positive Long id, @RequestBody @Valid Course course){
         return courseRepository.findById(id)
         .map(recordFound -> {
             recordFound.setName(course.getName());
@@ -68,7 +71,7 @@ public class CourseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable long id){
+    public ResponseEntity<Void> delete(@PathVariable @NotNull @Positive long id){
         return courseRepository.findById(id)
         .map(recordFound -> {
             courseRepository.deleteById(id);
